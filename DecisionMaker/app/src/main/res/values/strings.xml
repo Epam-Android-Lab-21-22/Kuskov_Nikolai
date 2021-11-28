@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Decision Maker</string>
+    <string name="decision_button">Что делать?</string>
+    <string name="decision_default_text">Узнай что тебе делать</string>
+    <string name="decision_counter_default_value">0</string>
+    <string name="decision_text_placeholder">%s %s</string>
+    <string name="you_need">Вам нужно</string>
+    <string name="advise_you">Советую вам</string>
+    <string name="terrible_mistake">Это будет страшной ошибкой -</string>
+    <string name="need_immediately">Нужно немедленно</string>
+    <string name="very_risky">Это очень рискованно -</string>
+    <string name="impossible">Невозможно</string>
+    <string name="best_sneakily">Лучше всего тайком</string>
+    <string name="what_you_want">Чувствую, что вы хотите</string>
+    <string name="yourself_know_what_follows">Вы сами знаете, что следует</string>
+    <string name="i_command">Повелеваю</string>
+    <string name="do_it_right_now">заняться этим прямо сейчас</string>
+    <string name="think_it_over_again">ещё раз всё обдумать</string>
+    <string name="provide_an_escape_route">предусмотреть путь для отступления</string>
+    <string name="jump_into_the_pool_with">прыгнуть в омут с головой</string>
+    <string name="hurry_to_make_decision">поторопиться с принятием решения</string>
+    <string name="forget_about_it">забыть об этом</string>
+    <string name="to_do_but_not_to_tell_anyone">сделать, но никому не рассказывать</string>
+    <string name="tell_a_friend">рассказать об этом другу и послушать его совета</string>
+    <string name="listen_to_me_and_do_opposite">послушать меня и сделать наоборот</string>
+    <string name="stop_asking_me">перестать спрашивать у бесполезного меня и принять решение самостоятельно. В КОИ-ТО ВЕКИ!</string>
 </resources>
