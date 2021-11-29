@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">epam_hw</string>
+    <string name="app_name">IMB calculator</string>
+    <string name="imb_coefficient_title">Коэффициент:</string>
+    <string name="imb_description_title">Описание:</string>
+    <string name="weight_title">Вес</string>
+    <string name="height_title">Рост</string>
+    <string name="imb_button_title">Посчитать!</string>
+    <string name="no_data_text">Нет данных</string>
+    <string name="imb_weight_pronounced_deficit">Выраженный дефицит массы тела.\nНеобходима срочная консультация специалиста.</string>
+    <string name="imb_weight_deficit">Недостаточная (дефицит) масса тела.\nНеобходима консультация специалиста.</string>
+    <string name="imb_normal">Норма</string>
+    <string name="imb_excess_weight">Избыточная масса тела (предожирение).\nНеобходима консультация специалиста.</string>
+    <string name="imb_first_degree_obesity">Ожирение первой степени.\nНеобходима консультация специалиста.</string>
+    <string name="imb_second_degree_obesity">Ожирение второй степени.\nНеобходима консультация специалиста.</string>
+    <string name="imb_third_degree_obesity">Ожирение третьей степени (морбидное).\nНеобходима срочная консультация специалиста.</string>
+    <string name="error_text">Вес или Рост введены неверно!!</string>
 </resources>
