@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="not_selected_carousel_item_width">100dp</dimen>
+    <dimen name="not_selected_carousel_item_height">130dp</dimen>
+
+    <dimen name="selected_carousel_item_width">140dp</dimen>
+    <dimen name="selected_carousel_item_height">180dp</dimen>
+
+    <dimen name="carousel_radius">160dp</dimen>
+    <integer name="carousel_scene_animation_duration">350</integer>
+
+    <integer name="selected_carousel_item_angle">0</integer>
+    <integer name="selected_carousel_item_rotation">0</integer>
+    <dimen name="selected_carousel_item_elevation">10dp</dimen>
+
+    <integer name="first_next_carousel_item_angle">15</integer>
+    <integer name="first_next_carousel_item_rotation">15</integer>
+    <dimen name="first_next_carousel_item_elevation">6dp</dimen>
+
+    <integer name="second_next_carousel_item_angle">30</integer>
+    <integer name="second_next_carousel_item_rotation">30</integer>
+    <dimen name="second_next_carousel_item_elevation">4dp</dimen>
+
+    <integer name="third_next_carousel_item_angle">45</integer>
+    <integer name="third_next_carousel_item_rotation">45</integer>
+    <dimen name="third_next_carousel_item_elevation">2dp</dimen>
+
+    <integer name="fourth_next_carousel_item_angle">60</integer>
+    <integer name="fourth_next_carousel_item_rotation">60</integer>
+    <dimen name="fourth_next_carousel_item_elevation">0dp</dimen>
+
+    <integer name="first_previous_carousel_item_angle">345</integer>
+    <integer name="first_previous_carousel_item_rotation">-15</integer>
+    <dimen name="first_previous_carousel_item_elevation">6dp</dimen>
+
+    <integer name="second_previous_carousel_item_angle">330</integer>
+    <integer name="second_previous_carousel_item_rotation">-30</integer>
+    <dimen name="second_previous_carousel_item_elevation">4dp</dimen>
+
+    <integer name="third_previous_carousel_item_angle">315</integer>
+    <integer name="third_previous_carousel_item_rotation">-45</integer>
+    <dimen name="third_previous_carousel_item_elevation">2dp</dimen>
+
+    <integer name="fourth_previous_carousel_item_angle">300</integer>
+    <integer name="fourth_previous_carousel_item_rotation">-60</integer>
+    <dimen name="fourth_previous_carousel_item_elevation">0dp</dimen>
+
+</resources>

@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">epam_hw</string>
+    <string name="title_abc">Alphabet</string>
+    <string name="question_abc_1">How much symbols in russian ABC?</string>
+    <string name="answer_abc_1">33</string>
+    <string name="title_art">Art</string>
+    <string name="question_art_1">____ Yefimovich Repin</string>
+    <string name="answer_art_1">Ilya</string>
+    <string name="title_biology">Biology</string>
+    <string name="question_biology_1">Pestik and _____</string>
+    <string name="answer_biology_1">tichinka</string>
+    <string name="title_geography">Geography</string>
+    <string name="question_geography_1">The biggest country</string>
+    <string name="answer_geography_1">Russia</string>
+    <string name="title_mathematica">Mathematica</string>
+    <string name="question_mathematica_1">2 + 2 = ?</string>
+    <string name="answer_mathematica_1">4</string>
+    <string name="title_music">Music</string>
+    <string name="question_music_1">The composer of "The Nutcracker" (Second name)</string>
+    <string name="answer_music_1">Tchaikovsky</string>
+    <string name="title_physics">Physics</string>
+    <string name="question_physics_1">_ = mc2</string>
+    <string name="answer_physics_1">E</string>
+    <string name="title_science">Science</string>
+    <string name="question_science_1">What is the Hydrogen in the periodic table? ( number )</string>
+    <string name="answer_science_1">1</string>
+    <string name="title_sport">Sport</string>
+    <string name="question_sports_1">How many players are there on the field of a football match? ( number )</string>
+    <string name="answer_sports_1">22</string>
+
+    <string name="random_title">RANDOM</string>
+    <string name="entered_symbols_default_value">Symbols entered: </string>
+    <string name="button_clicked_default_calue">Buttons clicked: </string>
+    <string name="answer_hint">Answer</string>
+
+    <string name="right_answer">CORRECT!</string>
+    <string name="wrong_answer">WRONG!</string>
 </resources>

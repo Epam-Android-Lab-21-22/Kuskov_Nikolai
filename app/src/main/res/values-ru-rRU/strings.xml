@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Епам ДЗ</string>
+    <string name="title_abc">Алфавит</string>
+    <string name="question_abc_1">Сколько букв в русском алфавите?</string>
+    <string name="answer_abc_1">33</string>
+    <string name="title_art">Искусство</string>
+    <string name="question_art_1">____ Ефимович Репин</string>
+    <string name="answer_art_1">Илья</string>
+    <string name="title_biology">Биология</string>
+    <string name="question_biology_1">Пестик и _____</string>
+    <string name="answer_biology_1">тычинка</string>
+    <string name="title_geography">География</string>
+    <string name="question_geography_1">Самамя большая страна</string>
+    <string name="answer_geography_1">Россия</string>
+    <string name="title_mathematica">Математика</string>
+    <string name="question_mathematica_1">2 + 2 = ?</string>
+    <string name="answer_mathematica_1">4</string>
+    <string name="title_music">Музыка</string>
+    <string name="question_music_1">Композитор "Щелкунчика" (Фамилия)</string>
+    <string name="answer_music_1">Чайковский</string>
+    <string name="title_physics">Физика</string>
+    <string name="question_physics_1">_ = mc2</string>
+    <string name="answer_physics_1">E</string>
+    <string name="title_science">Наука</string>
+    <string name="question_science_1">Какой по счету Водород в таблице Менделеева? ( число )</string>
+    <string name="answer_science_1">1</string>
+    <string name="title_sport">Спорт</string>
+    <string name="question_sports_1">Сколько игроков на поле  футбольного матча? ( число )</string>
+    <string name="answer_sports_1">22</string>
+
+    <string name="random_title">СЛУЧАЙНО</string>
+    <string name="entered_symbols_default_value">Символов введено: </string>
+    <string name="button_clicked_default_calue">Кнопок нажато: </string>
+    <string name="answer_hint">Ответ</string>
+
+    <string name="right_answer">ПРАВИЛЬНО!</string>
+    <string name="wrong_answer">НЕВЕРНО!</string>
+</resources>
