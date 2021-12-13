@@ -154,7 +154,26 @@ class FutureActivity : AppCompatActivity() {
                 .show()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(
+            MainActivity.BUTTON_ENABLED,
+            binding.futureButton.isEnabled && binding.futureButton.isClickable
+        )
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        binding.futureButton.setClickableAndEnabled(
+            savedInstanceState.getBoolean(
+                MainActivity.BUTTON_ENABLED,
+                false
+            )
+        )
+    }
+
     companion object {
+        private const val BUTTON_ENABLED = "BUTTON_ENABLED"
         private const val CAMERA_INTENT = "android.media.action.IMAGE_CAPTURE"
         private const val CAMERA_PERMISSION_CODE = 777
         private const val PACKAGE_URI_SCHEME = "package"
