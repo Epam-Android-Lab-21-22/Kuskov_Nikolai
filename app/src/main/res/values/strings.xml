@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">epam_hw</string>
+    <string name="app_name">Super App Navigation</string>
+    <string name="no_internet_text">No internet connection</string>
+    <string name="go_button_title">GO!</string>
+    <string name="future_button_title">SOME FUTURE</string>
+    <string name="ok">OK</string>
+    <string name="camera_not_allowed_title">Камера недоступна!</string>
+    <string name="camera_not_allowed_text">Камера нудоступна! Возможна камера отключена или отсутсвует.</string>
+    <string name="permission_title">Разрешение</string>
+    <string name="camera_permission_text">Разрешение на доступ к Камере</string>
+    <string name="camera_permission_explanation_text">Разрешение на доступ к Камере необходим для работы данного функционала.</string>
+    <string name="rejected_camera_permission_title">Разрешение отклонен</string>
+    <string name="rejected_camera_permission_text">Разрешение на Камеру необходимо для работы данного функционала.</string>
+    <string name="rejected_camera_permission_with_not_ask_again">Разрешение отклонено и больше не появится… Теперь необходимо давать разрешение в Настройках приложения.</string>
+    <string name="on_change_mind_text">Я передумал</string>
+    <string name="go_to_settings">Го ту Сеттингс</string>
 </resources>
