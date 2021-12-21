@@ -10,28 +10,16 @@ import com.nkuskov.epam_hw.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(), FragmentCallbacksHandler {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    private fun getBadge() = binding.bottomNavigationBar.getOrCreateBadge(binding.bottomNavigationBar.selectedItemId)
+    private fun getBadge() =
+        binding.bottomNavigationBar.getOrCreateBadge(binding.bottomNavigationBar.selectedItemId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         if (savedInstanceState == null) {
-            var bundle = bundleOf(
-                "MainFragment.KEY_CURRENT_STATE" to 5
-            )
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                add(
-                    R.id.fragment_container,
-                    MainFragment::class.java,
-                    bundleOf(
-                        "MainFragment.KEY_CURRENT_STATE" to 5
-                    )
-                )
-                addToBackStack(binding.bottomNavigationBar.selectedItemId.toString())
-            }
-//            createFragmentBackStacks()
+            createFragmentBackStacks()
             supportFragmentManager.restoreBackStack(binding.bottomNavigationBar.selectedItemId.toString())
+            setUpActionBarTitle(binding.bottomNavigationBar.selectedItemId)
         }
 
         supportFragmentManager.addOnBackStackChangedListener {
@@ -39,19 +27,20 @@ class MainActivity : AppCompatActivity(), FragmentCallbacksHandler {
         }
 
         binding.bottomNavigationBar.setOnItemSelectedListener { item ->
-            if(item.itemId != binding.bottomNavigationBar.selectedItemId)
-                supportFragmentManager.saveBackStack(item.itemId.toString())
-            setUpNavigationBarState(item.itemId)
+            if (item.itemId != binding.bottomNavigationBar.selectedItemId)
+                supportFragmentManager.saveBackStack(binding.bottomNavigationBar.selectedItemId.toString())
+            supportFragmentManager.restoreBackStack(item.itemId.toString())
+            setUpActionBarTitle(item.itemId)
             true
         }
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 1) {
+        if (supportFragmentManager.backStackEntryCount == 1 ) {
             finish()
         }
         super.onBackPressed()
-        getBadge().setUpCount(supportFragmentManager.backStackEntryCount)
+        getBadge().setUpCount(supportFragmentManager.backStackEntryCount - 1)
     }
 
     override fun onFragmentClicked(state: FragmentState) {
@@ -60,12 +49,16 @@ class MainActivity : AppCompatActivity(), FragmentCallbacksHandler {
             add(
                 R.id.fragment_container,
                 MainFragment::class.java,
-                bundleOf(
-                    "MainFragment.KEY_CURRENT_STATE" to state.ordinal
+                bundleOf(MainFragment.KEY_CURRENT_STATE to state.ordinal
                 )
             )
             addToBackStack(binding.bottomNavigationBar.selectedItemId.toString())
         }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        setUpActionBarTitle(binding.bottomNavigationBar.selectedItemId)
     }
 
     private fun createFragmentBackStacks() {
@@ -75,22 +68,25 @@ class MainActivity : AppCompatActivity(), FragmentCallbacksHandler {
     }
 
     private fun initBackStack(state: FragmentState) {
-        val stackID = getStackIDFromState(state)
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             add(
-                R.id.fragment_container, MainFragment::class.java, bundleOf(
-                    "sasdasd" to state.ordinal,
-                    "sdad" to 20
+                R.id.fragment_container,
+                MainFragment::class.java,
+                bundleOf(MainFragment.KEY_CURRENT_STATE to state.ordinal
                 )
             )
-            addToBackStack(stackID.toString())
+            addToBackStack(getStackIDFromState(state).toString())
         }
-        supportFragmentManager.saveBackStack(stackID.toString())
+        supportFragmentManager.saveBackStack(getStackIDFromState(state).toString())
     }
 
-    private fun setUpNavigationBarState(stackID: Int) {
-        supportFragmentManager.restoreBackStack(stackID.toString())
+    private fun setUpActionBarTitle(selectedPageID: Int) {
+        supportActionBar?.title =
+            getString(
+                R.string.action_bar_placeholder,
+                getString(getStackNameFromSelectedPage(selectedPageID))
+            )
     }
 
     private fun BadgeDrawable.setUpCount(number: Int) {
@@ -99,11 +95,20 @@ class MainActivity : AppCompatActivity(), FragmentCallbacksHandler {
     }
 
     companion object {
-        fun getStackIDFromState(state: FragmentState) : Int {
+        private fun getStackIDFromState(state: FragmentState): Int {
             return when (state) {
                 FragmentState.RED -> R.id.page_red
                 FragmentState.BLUE -> R.id.page_blue
                 FragmentState.GREEN -> R.id.page_green
+            }
+        }
+
+        private fun getStackNameFromSelectedPage(id: Int): Int {
+            return when (id) {
+                R.id.page_red -> R.string.red
+                R.id.page_blue -> R.string.blue
+                R.id.page_green -> R.string.green
+                else -> R.string.app_name
             }
         }
     }
