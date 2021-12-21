@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/page_red"
+        android:icon="@drawable/ic_baseline_star_24"
+        android:title="@string/red"/>
+    <item
+        android:id="@+id/page_blue"
+        android:icon="@drawable/ic_baseline_bluetooth_24"
+        android:title="@string/blue"/>
+    <item
+        android:id="@+id/page_green"
+        android:icon="@drawable/ic_baseline_android_24"
+        android:title="@string/green"/>
+</menu>

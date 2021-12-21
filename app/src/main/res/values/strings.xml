@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">epam_hw</string>
+    <string name="red">Red</string>
+    <string name="blue">Blue</string>
+    <string name="green">Green</string>
+    <string name="action_bar_placeholder">Stack: %s</string>
 </resources>
