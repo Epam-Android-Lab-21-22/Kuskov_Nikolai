@@ -10,171 +10,87 @@ import com.nkuskov.epam_hw.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(), FragmentCallbacksHandler {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    private val redPageData = NavigationBarStateData(
-        RED_PAGE_BACK_STACK,
-        RED_PAGE_FRAGMENT_TAG,
-        R.color.red,
-        R.string.red
-    )
-
-    private val bluePageData = NavigationBarStateData(
-        BLUE_PAGE_BACK_STACK,
-        BLUE_PAGE_FRAGMENT_TAG,
-        R.color.blue,
-        R.string.blue
-    )
-
-    private val greenPageData = NavigationBarStateData(
-        GREEN_PAGE_BACK_STACK,
-        GREEN_PAGE_FRAGMENT_TAG,
-        R.color.green,
-        R.string.green
-    )
-
-    private val pageDataMap = mapOf(
-        NavigationBarState.RED to redPageData,
-        NavigationBarState.BLUE to bluePageData,
-        NavigationBarState.GREEN to greenPageData
-    )
-
-    private var currentState = NavigationBarState.RED
-
-    private var currentPageCount = 0
+    private fun getBadge() = binding.bottomNavigationBar.getOrCreateBadge(binding.bottomNavigationBar.selectedItemId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         if (savedInstanceState == null) {
-            createFragmentBackStacks()
-            setUpDefaultUI()
+            var bundle = bundleOf(
+                "MainFragment.KEY_CURRENT_STATE" to 5
+            )
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add(
+                    R.id.fragment_container,
+                    MainFragment::class.java,
+                    bundleOf(
+                        "MainFragment.KEY_CURRENT_STATE" to 5
+                    )
+                )
+                addToBackStack(binding.bottomNavigationBar.selectedItemId.toString())
+            }
+//            createFragmentBackStacks()
+            supportFragmentManager.restoreBackStack(binding.bottomNavigationBar.selectedItemId.toString())
+        }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            getBadge().setUpCount(supportFragmentManager.backStackEntryCount - 1)
         }
 
         binding.bottomNavigationBar.setOnItemSelectedListener { item ->
-            supportFragmentManager.saveBackStack(getPageData(currentState).backStackKey)
-            when (item.itemId) {
-                R.id.page_red -> {
-                    setUpNavigationBarState(NavigationBarState.RED)
-                }
-                R.id.page_blue -> {
-                    setUpNavigationBarState(NavigationBarState.BLUE)
-                }
-                R.id.page_green -> {
-                    setUpNavigationBarState(NavigationBarState.GREEN)
-                }
-            }
+            if(item.itemId != binding.bottomNavigationBar.selectedItemId)
+                supportFragmentManager.saveBackStack(item.itemId.toString())
+            setUpNavigationBarState(item.itemId)
             true
         }
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        if (currentPageCount-- == 0) {
+        if (supportFragmentManager.backStackEntryCount == 1) {
             finish()
         }
-        getBadge(currentState).setUpCount(currentPageCount)
+        super.onBackPressed()
+        getBadge().setUpCount(supportFragmentManager.backStackEntryCount)
     }
 
-    override fun onFragmentClicked() {
-        currentPageCount++
+    override fun onFragmentClicked(state: FragmentState) {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             add(
                 R.id.fragment_container,
                 MainFragment::class.java,
                 bundleOf(
-                    KEY_FRAGMENT_NUMBER to currentPageCount,
-                    KEY_FRAGMENT_COLOR_ID to getPageData(currentState).colorResourceID
+                    "MainFragment.KEY_CURRENT_STATE" to state.ordinal
                 )
             )
-            addToBackStack(getPageData(currentState).backStackKey)
+            addToBackStack(binding.bottomNavigationBar.selectedItemId.toString())
         }
-        getBadge(currentState).setUpCount(currentPageCount)
-    }
-
-    private fun setUpDefaultUI() {
-        getBadge(NavigationBarState.RED).setUpCount(0)
-        getBadge(NavigationBarState.BLUE).setUpCount(0)
-        getBadge(NavigationBarState.GREEN).setUpCount(0)
-        binding.bottomNavigationBar.selectedItemId = R.id.page_red
-        setUpNavigationBarState(NavigationBarState.RED)
     }
 
     private fun createFragmentBackStacks() {
+        initBackStack(FragmentState.RED)
+        initBackStack(FragmentState.BLUE)
+        initBackStack(FragmentState.GREEN)
+    }
+
+    private fun initBackStack(state: FragmentState) {
+        val stackID = getStackIDFromState(state)
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             add(
                 R.id.fragment_container, MainFragment::class.java, bundleOf(
-                    KEY_FRAGMENT_NUMBER to 0,
-                    KEY_FRAGMENT_COLOR_ID to redPageData.colorResourceID
-                ),
-                redPageData.fragmentTag
+                    "sasdasd" to state.ordinal,
+                    "sdad" to 20
+                )
             )
-            addToBackStack(redPageData.backStackKey)
+            addToBackStack(stackID.toString())
         }
-        supportFragmentManager.saveBackStack(redPageData.backStackKey)
-
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            add(
-                R.id.fragment_container, MainFragment::class.java, bundleOf(
-                    KEY_FRAGMENT_NUMBER to 0,
-                    KEY_FRAGMENT_COLOR_ID to bluePageData.colorResourceID
-                ),
-                bluePageData.fragmentTag
-            )
-            addToBackStack(bluePageData.backStackKey)
-        }
-        supportFragmentManager.saveBackStack(bluePageData.backStackKey)
-
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            add(
-                R.id.fragment_container, MainFragment::class.java, bundleOf(
-                    KEY_FRAGMENT_NUMBER to 0,
-                    KEY_FRAGMENT_COLOR_ID to greenPageData.colorResourceID
-                ),
-                greenPageData.fragmentTag
-            )
-            addToBackStack(greenPageData.backStackKey)
-        }
-        supportFragmentManager.saveBackStack(greenPageData.backStackKey)
+        supportFragmentManager.saveBackStack(stackID.toString())
     }
 
-    private fun setUpNavigationBarState(state: NavigationBarState) {
-        supportFragmentManager.restoreBackStack(getPageData(state).backStackKey)
-        currentState = state
-        currentPageCount = getBadge(currentState).number
-        supportActionBar?.title =
-            getString(R.string.action_bar_placeholder, getString(getPageData(currentState).nameResourceID))
-    }
-
-    private fun getBadge(state: NavigationBarState): BadgeDrawable {
-        return when (state) {
-            NavigationBarState.RED -> binding.bottomNavigationBar.getOrCreateBadge(R.id.page_red)
-            NavigationBarState.BLUE -> binding.bottomNavigationBar.getOrCreateBadge(R.id.page_blue)
-            NavigationBarState.GREEN -> binding.bottomNavigationBar.getOrCreateBadge(R.id.page_green)
-        }
-    }
-
-    private fun getPageData(state: NavigationBarState) : NavigationBarStateData {
-        return pageDataMap.getOrDefault(state, redPageData)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(KEY_RED_COUNT, getBadge(NavigationBarState.RED).number)
-        outState.putInt(KEY_BLUE_COUNT, getBadge(NavigationBarState.BLUE).number)
-        outState.putInt(KEY_GREEN_COUNT, getBadge(NavigationBarState.GREEN).number)
-        outState.putInt(KEY_CURRENT_STATE, currentState.ordinal)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        getBadge(NavigationBarState.RED).setUpCount(savedInstanceState.getInt(KEY_RED_COUNT, 0))
-        getBadge(NavigationBarState.BLUE).setUpCount(savedInstanceState.getInt(KEY_BLUE_COUNT, 0))
-        getBadge(NavigationBarState.GREEN).setUpCount(savedInstanceState.getInt(KEY_GREEN_COUNT, 0))
-        currentState = NavigationBarState.values().first { it.ordinal == savedInstanceState.getInt(KEY_CURRENT_STATE, 0) }
-        setUpNavigationBarState(currentState)
+    private fun setUpNavigationBarState(stackID: Int) {
+        supportFragmentManager.restoreBackStack(stackID.toString())
     }
 
     private fun BadgeDrawable.setUpCount(number: Int) {
@@ -183,30 +99,12 @@ class MainActivity : AppCompatActivity(), FragmentCallbacksHandler {
     }
 
     companion object {
-        const val KEY_FRAGMENT_NUMBER = "KEY_FRAGMENT_NUMBER"
-        const val KEY_FRAGMENT_COLOR_ID = "KEY_FRAGMENT_COLOR_ID"
-        const val KEY_CURRENT_STATE = "KEY_CURRENT_STATE"
-        const val RED_PAGE_BACK_STACK = "RED_PAGE_BACK_STACK"
-        const val RED_PAGE_FRAGMENT_TAG = "RED_PAGE_FRAGMENT_TAG"
-        const val KEY_RED_COUNT = "KEY_RED_COUNT"
-        const val BLUE_PAGE_BACK_STACK = "BLUE_PAGE_BACK_STACK"
-        const val BLUE_PAGE_FRAGMENT_TAG = "BLUE_PAGE_FRAGMENT_TAG"
-        const val KEY_BLUE_COUNT = "KEY_BLUE_COUNT"
-        const val GREEN_PAGE_BACK_STACK = "GREEN_PAGE_BACK_STACK"
-        const val GREEN_PAGE_FRAGMENT_TAG = "GREEN_PAGE_FRAGMENT_TAG"
-        const val KEY_GREEN_COUNT = "KEY_GREEN_COUNT"
-
-        enum class NavigationBarState {
-            RED,
-            BLUE,
-            GREEN
+        fun getStackIDFromState(state: FragmentState) : Int {
+            return when (state) {
+                FragmentState.RED -> R.id.page_red
+                FragmentState.BLUE -> R.id.page_blue
+                FragmentState.GREEN -> R.id.page_green
+            }
         }
     }
-
-    data class NavigationBarStateData(
-        val backStackKey: String,
-        val fragmentTag: String,
-        val colorResourceID: Int,
-        val nameResourceID: Int
-    )
 }

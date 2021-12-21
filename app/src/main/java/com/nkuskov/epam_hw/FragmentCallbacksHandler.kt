@@ -1,5 +1,5 @@
 package com.nkuskov.epam_hw
 
 sealed interface FragmentCallbacksHandler {
-    fun onFragmentClicked()
+    fun onFragmentClicked(state: FragmentState)
 }
