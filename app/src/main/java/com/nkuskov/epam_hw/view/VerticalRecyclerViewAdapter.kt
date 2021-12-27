@@ -2,14 +2,17 @@ package com.nkuskov.epam_hw
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nkuskov.epam_hw.databinding.LinearButtonLayoutBinding
 import com.nkuskov.epam_hw.databinding.LinearCheckboxLayoutBinding
 import com.nkuskov.epam_hw.databinding.LinearTitleLayoutBinding
+import com.nkuskov.epam_hw.presenter.VerticalRecyclerViewPresenter
+import com.nkuskov.epam_hw.model.VerticalItem
 
-class VerticalRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val items: MutableList<VerticalItem> = mutableListOf()
+class VerticalRecyclerViewAdapter(private val presenter: VerticalRecyclerViewPresenter) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -22,13 +25,13 @@ class VerticalRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
                 viewBinding = LinearButtonLayoutBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 ),
-                buttonAction = { position -> removeItem(position)}
+                buttonAction = { position -> presenter.removeItem(presenter.getItems()[position])}
             )
             VerticalItemType.CHECKBOX.ordinal -> CheckboxViewHolder(
                 viewBinding = LinearCheckboxLayoutBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 ),
-                checkAction = {position, isChecked -> changeCheckedStatus(position, isChecked)}
+                checkAction = {position, isChecked -> presenter.changeCheckedStatus(position, isChecked)}
             )
             else -> throw Exception("Not valid viewType")
         }
@@ -36,38 +39,30 @@ class VerticalRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is TitleViewHolder -> holder.bind(items[position] as VerticalItem.TitleItem)
-            is CheckboxViewHolder -> holder.bind(items[position] as VerticalItem.CheckboxItem)
-            is ButtonViewHolder -> holder.bind(items[position] as VerticalItem.ButtonItem)
+            is TitleViewHolder -> holder.bind(presenter.getItems()[position] as VerticalItem.TitleItem)
+            is CheckboxViewHolder -> holder.bind(presenter.getItems()[position] as VerticalItem.CheckboxItem)
+            is ButtonViewHolder -> holder.bind(presenter.getItems()[position] as VerticalItem.ButtonItem)
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = presenter.getItems().size
 
     override fun getItemViewType(position: Int): Int {
-        return when (items[position]) {
+        return when (presenter.getItems()[position]) {
             is VerticalItem.TitleItem -> VerticalItemType.TITLE.ordinal
             is VerticalItem.ButtonItem -> VerticalItemType.BUTTON.ordinal
             is VerticalItem.CheckboxItem -> VerticalItemType.CHECKBOX.ordinal
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setUpItems(items: List<VerticalItem>) {
-        this.items.clear()
-        this.items.addAll(items)
-        notifyDataSetChanged()
-    }
-
-    private fun removeItem(position: Int) {
-        items.removeAt(position)
+    fun removeItem(position: Int) {
         notifyItemRemoved(position)
     }
 
-    private fun changeCheckedStatus(position: Int, isChecked: Boolean) {
-        val newItem = (items[position] as VerticalItem.CheckboxItem).copy(isChecked = isChecked)
-        items.removeAt(position)
-        items.add(position, newItem)
+    fun changeCheckedStatus(position: Int, isChecked: Boolean) {
+        val newItem = (presenter.getItems()[position] as VerticalItem.CheckboxItem).copy(isChecked = isChecked)
+        presenter.getItems().removeAt(position)
+        presenter.getItems().add(position, newItem)
         notifyItemChanged(position)
     }
 
@@ -103,7 +98,11 @@ class VerticalRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
         fun bind(item: VerticalItem.ButtonItem) {
             viewBinding.buttonItemTextView.text = item.info
             viewBinding.linerLayoutButton.setOnClickListener(null)
+            viewBinding.linerLayoutButton.visibility = VISIBLE
+            viewBinding.linearLayoutProgress.visibility = INVISIBLE
             viewBinding.linerLayoutButton.setOnClickListener {
+                it.visibility = INVISIBLE
+                viewBinding.linearLayoutProgress.visibility = VISIBLE
                 buttonAction(adapterPosition)
             }
         }

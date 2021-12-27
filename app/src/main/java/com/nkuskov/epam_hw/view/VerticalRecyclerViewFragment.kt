@@ -1,4 +1,4 @@
-package com.nkuskov.epam_hw
+package com.nkuskov.epam_hw.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,27 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.nkuskov.epam_hw.VerticalRecyclerViewAdapter
 import com.nkuskov.epam_hw.databinding.FragmentVerticalRecyclerViewBinding
+import com.nkuskov.epam_hw.presenter.VerticalRecyclerViewPresenter
 
-class VerticalRecyclerViewFragment : Fragment() {
+class VerticalRecyclerViewFragment : Fragment(), VerticalRecyclerView {
 
     private var _binding: FragmentVerticalRecyclerViewBinding? = null
     private lateinit var verticalRecyclerViewAdapter: VerticalRecyclerViewAdapter
 
     private val binding get() = _binding!!
-    private val recyclerViewItems = mutableListOf(
-        VerticalItem.TitleItem(getString(R.string.schedule)),
-        VerticalItem.CheckboxItem(getString(R.string.come_to_the_work), false),
-        VerticalItem.CheckboxItem(getString(R.string.drink_coffee), false),
-        VerticalItem.CheckboxItem(getString(R.string.have_a_dinner), false),
-        VerticalItem.CheckboxItem(getString(R.string.go_home), false),
-        VerticalItem.TitleItem(getString(R.string.shops)),
-        VerticalItem.ButtonItem(getString(R.string.ok)),
-        VerticalItem.ButtonItem(getString(R.string.fiveterochka)),
-        VerticalItem.ButtonItem(getString(R.string.magnit)),
-        VerticalItem.ButtonItem(getString(R.string.crossroad)),
-        VerticalItem.ButtonItem(getString(R.string.spar))
-        )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,14 +26,16 @@ class VerticalRecyclerViewFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val presenter = VerticalRecyclerViewPresenter(this, MainActivity.verticalModel)
         binding.verticalRecyclerView.apply {
             layoutManager =
                 LinearLayoutManager(context)
-            verticalRecyclerViewAdapter = VerticalRecyclerViewAdapter()
+            verticalRecyclerViewAdapter = VerticalRecyclerViewAdapter(presenter)
             adapter = verticalRecyclerViewAdapter
-            verticalRecyclerViewAdapter.setUpItems(recyclerViewItems)
+            verticalRecyclerViewAdapter.notifyDataSetChanged()
         }
     }
 
@@ -52,5 +43,17 @@ class VerticalRecyclerViewFragment : Fragment() {
         super.onDestroy()
         binding.verticalRecyclerView.adapter = null
         _binding = null
+    }
+
+    override fun removeItem(position: Int) {
+        requireActivity().runOnUiThread{
+            verticalRecyclerViewAdapter.removeItem(position)
+        }
+    }
+
+    override fun changeCheckedStatus(position: Int, isChecked: Boolean) {
+        requireActivity().runOnUiThread {
+            verticalRecyclerViewAdapter.changeCheckedStatus(position, isChecked)
+        }
     }
 }

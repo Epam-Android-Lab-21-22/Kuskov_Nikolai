@@ -1,10 +1,13 @@
-package com.nkuskov.epam_hw
+package com.nkuskov.epam_hw.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.nkuskov.epam_hw.R
 import com.nkuskov.epam_hw.databinding.ActivityMainBinding
+import com.nkuskov.epam_hw.model.GridRecyclerViewModel
+import com.nkuskov.epam_hw.model.VerticalRecyclerViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,5 +39,10 @@ class MainActivity : AppCompatActivity() {
                 null
             )
         }
+    }
+
+    companion object{
+        val verticalModel = VerticalRecyclerViewModel()
+        val gridModel = GridRecyclerViewModel()
     }
 }

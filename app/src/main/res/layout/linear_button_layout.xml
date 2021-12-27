@@ -27,4 +27,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <ProgressBar
+        android:id="@+id/linear_layout_progress"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/liner_layout_button"
+        app:layout_constraintEnd_toEndOf="@id/liner_layout_button"
+        app:layout_constraintStart_toStartOf="@id/liner_layout_button"
+        app:layout_constraintTop_toTopOf="@id/liner_layout_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

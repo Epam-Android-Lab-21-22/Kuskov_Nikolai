@@ -1,4 +1,4 @@
-package com.nkuskov.epam_hw
+package com.nkuskov.epam_hw.model
 
 sealed class VerticalItem {
 
