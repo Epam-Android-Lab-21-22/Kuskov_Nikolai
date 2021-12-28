@@ -2,4 +2,16 @@
     <string name="app_name">epam_hw</string>
     <string name="vertical">VERTICAL</string>
     <string name="grid">GRID</string>
+    <string name="add">ADD</string>
+    <string name="schedule">График</string>
+    <string name="shops">Магазины поблизости</string>
+    <string name="come_to_the_work">Прийти на работу</string>
+    <string name="drink_coffee">Выпить кофе</string>
+    <string name="have_a_dinner">Пообедать</string>
+    <string name="go_home">Пойти домой</string>
+    <string name="ok">ОКЕЙ</string>
+    <string name="fiveterochka">Пятерочка</string>
+    <string name="magnit">Магнит</string>
+    <string name="crossroad">Перекресток</string>
+    <string name="spar">SPAR</string>
 </resources>
