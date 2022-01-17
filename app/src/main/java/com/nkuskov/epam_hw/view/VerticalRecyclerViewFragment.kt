@@ -13,6 +13,7 @@ import com.nkuskov.epam_hw.presenter.VerticalRecyclerViewPresenter
 
 class VerticalRecyclerViewFragment : Fragment(), VerticalRecyclerView {
 
+    private lateinit var presenter: VerticalRecyclerViewPresenter
     private var _binding: FragmentVerticalRecyclerViewBinding? = null
     private lateinit var verticalRecyclerViewAdapter: VerticalRecyclerViewAdapter
 
@@ -29,7 +30,7 @@ class VerticalRecyclerViewFragment : Fragment(), VerticalRecyclerView {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val presenter = VerticalRecyclerViewPresenter(this, MainActivity.verticalModel)
+        presenter = VerticalRecyclerViewPresenter(this)
         binding.verticalRecyclerView.apply {
             layoutManager =
                 LinearLayoutManager(context)
@@ -43,16 +44,17 @@ class VerticalRecyclerViewFragment : Fragment(), VerticalRecyclerView {
         super.onDestroy()
         binding.verticalRecyclerView.adapter = null
         _binding = null
+        presenter.onDestroy()
     }
 
     override fun removeItem(position: Int) {
-        requireActivity().runOnUiThread{
+        activity?.runOnUiThread{
             verticalRecyclerViewAdapter.removeItem(position)
         }
     }
 
     override fun changeCheckedStatus(position: Int, isChecked: Boolean) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             verticalRecyclerViewAdapter.changeCheckedStatus(position, isChecked)
         }
     }

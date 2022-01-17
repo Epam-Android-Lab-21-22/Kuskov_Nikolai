@@ -12,6 +12,7 @@ import com.nkuskov.epam_hw.presenter.GridRecyclerViewPresenter
 private const val SPAN_COUNT = 3
 
 class GridRecyclerViewFragment : Fragment(), GridRecyclerView {
+    private lateinit var presenter: GridRecyclerViewPresenter
     private var _binding: FragmentGridRecyclerViewBinding? = null
     private lateinit var gridLayoutAdapter: GridRecyclerViewAdapter
 
@@ -27,7 +28,7 @@ class GridRecyclerViewFragment : Fragment(), GridRecyclerView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val presenter = GridRecyclerViewPresenter(this, MainActivity.gridModel)
+        presenter = GridRecyclerViewPresenter(this)
         binding.gridRecyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
             gridLayoutAdapter = GridRecyclerViewAdapter(presenter)
@@ -42,20 +43,26 @@ class GridRecyclerViewFragment : Fragment(), GridRecyclerView {
 
     override fun onDestroy() {
         super.onDestroy()
+        binding.gridRecyclerView.adapter = null
         _binding = null
+        presenter.onDestroy()
     }
 
     override fun updateItem(position: Int) {
-        requireActivity().runOnUiThread{
-            gridLayoutAdapter.updateItem(position)
-            binding.gridRecyclerView.smoothScrollToPosition(gridLayoutAdapter.itemCount)
+        activity?.runOnUiThread{
+            if(_binding != null) {
+                gridLayoutAdapter.updateItem(position)
+                binding.gridRecyclerView.smoothScrollToPosition(gridLayoutAdapter.itemCount)
+            }
         }
     }
 
     override fun addNewItem(position: Int) {
-        requireActivity().runOnUiThread{
-            gridLayoutAdapter.addNewItem(position)
-            binding.gridRecyclerView.smoothScrollToPosition(gridLayoutAdapter.itemCount)
+        activity?.runOnUiThread{
+            if(_binding != null) {
+                gridLayoutAdapter.addNewItem(position)
+                binding.gridRecyclerView.smoothScrollToPosition(gridLayoutAdapter.itemCount)
+            }
         }
     }
 }

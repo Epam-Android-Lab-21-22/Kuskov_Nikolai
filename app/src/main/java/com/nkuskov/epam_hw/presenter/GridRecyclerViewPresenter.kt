@@ -4,21 +4,25 @@ import com.nkuskov.epam_hw.model.GridItem
 import com.nkuskov.epam_hw.model.GridRecyclerViewModel
 import com.nkuskov.epam_hw.model.GridRecyclerViewModelListener
 import com.nkuskov.epam_hw.view.GridRecyclerView
+import com.nkuskov.epam_hw.view.MainActivity
 
-class GridRecyclerViewPresenter(private val gridRecyclerView: GridRecyclerView,
-                                private val model: GridRecyclerViewModel): GridRecyclerViewModelListener {
+class GridRecyclerViewPresenter(private var gridRecyclerView: GridRecyclerView?): GridRecyclerViewModelListener {
 
     fun addNewItem() {
-        model.addNewItem(this)
+        MainActivity.gridModel.addNewItem(this)
     }
 
-    fun getItems() : MutableList<GridItem> = model.items
+    fun getItems() : MutableList<GridItem> = MainActivity.gridModel.items
 
     override fun onItemAdded(position: Int) {
-        gridRecyclerView.addNewItem(position)
+        gridRecyclerView?.addNewItem(position)
     }
 
     override fun onItemUpdated(position: Int) {
-        gridRecyclerView.updateItem(position)
+        gridRecyclerView?.updateItem(position)
+    }
+
+    fun onDestroy(){
+        gridRecyclerView = null
     }
 }
