@@ -1,4 +1,4 @@
-package com.nkuskov.epam_hw.model
+package com.nkuskov.epam_hw.presenter.view_data
 
 sealed class VerticalItem {
 
@@ -6,11 +6,12 @@ sealed class VerticalItem {
         val title: String
     ) : VerticalItem()
 
-    data class ButtonItem(
-        val info: String
+    data class ShopItem(
+        val info: String,
+        val loading: Boolean
     ) : VerticalItem()
 
-    data class CheckboxItem(
+    data class ToDoItem(
         val note: String,
         val isChecked: Boolean
     ) : VerticalItem()

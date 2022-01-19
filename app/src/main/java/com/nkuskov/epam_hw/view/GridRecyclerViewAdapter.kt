@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nkuskov.epam_hw.databinding.GridItemLayoutBinding
 import com.nkuskov.epam_hw.databinding.GridPlaceholderLayoutBinding
-import com.nkuskov.epam_hw.model.GridItem
+import com.nkuskov.epam_hw.presenter.view_data.GridItem
 import com.nkuskov.epam_hw.presenter.GridRecyclerViewPresenter
 
 class GridRecyclerViewAdapter(private val presenter: GridRecyclerViewPresenter) :
@@ -32,13 +32,13 @@ class GridRecyclerViewAdapter(private val presenter: GridRecyclerViewPresenter) 
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (presenter.getItems()[position]) {
+        return when (presenter.items[position]) {
             is GridItem.DefaultItem -> GridItemType.DEFAULT.ordinal
             is GridItem.Placeholder -> GridItemType.PLACEHOLDER.ordinal
         }
     }
 
-    override fun getItemCount(): Int = presenter.getItems().size
+    override fun getItemCount(): Int = presenter.items.size
 
     fun updateItem(position: Int) {
         notifyItemChanged(position)

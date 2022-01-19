@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.nkuskov.epam_hw.MyApp
 import com.nkuskov.epam_hw.VerticalRecyclerViewAdapter
 import com.nkuskov.epam_hw.databinding.FragmentVerticalRecyclerViewBinding
+import com.nkuskov.epam_hw.presenter.IVerticalRecyclerView
 import com.nkuskov.epam_hw.presenter.VerticalRecyclerViewPresenter
+import com.nkuskov.epam_hw.presenter.view_data.VerticalItem
 
-class VerticalRecyclerViewFragment : Fragment(), VerticalRecyclerView {
+class VerticalRecyclerViewFragment : Fragment(), IVerticalRecyclerView {
 
     private lateinit var presenter: VerticalRecyclerViewPresenter
     private var _binding: FragmentVerticalRecyclerViewBinding? = null
@@ -30,7 +33,9 @@ class VerticalRecyclerViewFragment : Fragment(), VerticalRecyclerView {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter = VerticalRecyclerViewPresenter(this)
+        val myApp = activity?.application as? MyApp ?: return
+        presenter = myApp.verticalViewPresenter
+        presenter.verticalRecyclerView = this
         binding.verticalRecyclerView.apply {
             layoutManager =
                 LinearLayoutManager(context)
@@ -44,7 +49,6 @@ class VerticalRecyclerViewFragment : Fragment(), VerticalRecyclerView {
         super.onDestroy()
         binding.verticalRecyclerView.adapter = null
         _binding = null
-        presenter.onDestroy()
     }
 
     override fun removeItem(position: Int) {
@@ -53,9 +57,15 @@ class VerticalRecyclerViewFragment : Fragment(), VerticalRecyclerView {
         }
     }
 
-    override fun changeCheckedStatus(position: Int, isChecked: Boolean) {
+    override fun updateItem(position: Int) {
+        activity?.runOnUiThread{
+            verticalRecyclerViewAdapter.updateItem(position)
+        }
+    }
+
+    override fun changeCheckedStatus(position: Int) {
         activity?.runOnUiThread {
-            verticalRecyclerViewAdapter.changeCheckedStatus(position, isChecked)
+            verticalRecyclerViewAdapter.changeCheckedStatus(position)
         }
     }
 }

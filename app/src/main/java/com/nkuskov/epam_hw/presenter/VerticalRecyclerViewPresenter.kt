@@ -1,26 +1,40 @@
 package com.nkuskov.epam_hw.presenter
 
-import com.nkuskov.epam_hw.model.VerticalItem
-import com.nkuskov.epam_hw.model.VerticalRecyclerViewModel
-import com.nkuskov.epam_hw.model.VerticalRecyclerViewModelListener
-import com.nkuskov.epam_hw.view.MainActivity
-import com.nkuskov.epam_hw.view.VerticalRecyclerView
-import kotlin.concurrent.thread
+import com.nkuskov.epam_hw.model.Shop
+import com.nkuskov.epam_hw.model.ToDo
+import com.nkuskov.epam_hw.model.VerticalItemsModel
+import com.nkuskov.epam_hw.presenter.view_data.VerticalItem
+import com.nkuskov.epam_hw.presenter.view_data.VerticalViewData
 
-class VerticalRecyclerViewPresenter(private var verticalRecyclerView: VerticalRecyclerView?): VerticalRecyclerViewModelListener {
+class VerticalRecyclerViewPresenter{
 
-    fun removeItem(item: VerticalItem) {
-        MainActivity.verticalModel.removeItem(item, this)
+    val model = VerticalItemsModel()
+    var verticalRecyclerView: IVerticalRecyclerView? = null
+
+    private val _items = VerticalViewData.getViewDataFromModel(model)
+
+    val items get() = _items
+
+    fun removeItem(position: Int) {
+        val shopToRemove = items[position] as? VerticalItem.ShopItem ?: return
+        val shop = Shop(shopToRemove.info)
+        val onLoadingItem = VerticalItem.ShopItem(shopToRemove.info, true)
+        items[position] = onLoadingItem
+        verticalRecyclerView?.updateItem(position)
+        model.removeShop(shop) {
+            val removingIndex = items.indexOf(onLoadingItem)
+            _items.removeAt(removingIndex)
+            verticalRecyclerView?.removeItem(removingIndex)
+        }
     }
 
     fun changeCheckedStatus(position: Int, isChecked: Boolean) {
-        verticalRecyclerView?.changeCheckedStatus(position, isChecked)
-    }
-
-    fun getItems(): MutableList<VerticalItem> = MainActivity.verticalModel.items
-
-    override fun onItemRemoved(position: Int) {
-        verticalRecyclerView?.removeItem(position)
+        val todoItem = items[position] as? VerticalItem.ToDoItem ?: return
+        if (model.changeCheckedTodo(ToDo(todoItem.note, todoItem.isChecked), isChecked)) {
+            _items[position] =
+                VerticalViewData.convertTodoToVerticalItem(ToDo(todoItem.note, isChecked))
+            verticalRecyclerView?.changeCheckedStatus(position)
+        }
     }
 
     fun onDestroy(){

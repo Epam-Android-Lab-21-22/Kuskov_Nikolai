@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import com.nkuskov.epam_hw.MyApp
 import com.nkuskov.epam_hw.databinding.FragmentGridRecyclerViewBinding
 import com.nkuskov.epam_hw.presenter.GridRecyclerViewPresenter
+import com.nkuskov.epam_hw.presenter.IGridRecyclerView
 
 private const val SPAN_COUNT = 3
 
-class GridRecyclerViewFragment : Fragment(), GridRecyclerView {
+class GridRecyclerViewFragment : Fragment(), IGridRecyclerView {
     private lateinit var presenter: GridRecyclerViewPresenter
     private var _binding: FragmentGridRecyclerViewBinding? = null
     private lateinit var gridLayoutAdapter: GridRecyclerViewAdapter
@@ -28,7 +30,9 @@ class GridRecyclerViewFragment : Fragment(), GridRecyclerView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter = GridRecyclerViewPresenter(this)
+        val myApp = activity?.application as? MyApp ?: return
+        presenter = myApp.gridViewPresenter
+        presenter.gridRecyclerView = this
         binding.gridRecyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
             gridLayoutAdapter = GridRecyclerViewAdapter(presenter)
@@ -45,7 +49,6 @@ class GridRecyclerViewFragment : Fragment(), GridRecyclerView {
         super.onDestroy()
         binding.gridRecyclerView.adapter = null
         _binding = null
-        presenter.onDestroy()
     }
 
     override fun updateItem(position: Int) {

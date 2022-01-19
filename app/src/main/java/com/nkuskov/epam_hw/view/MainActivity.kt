@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.nkuskov.epam_hw.R
 import com.nkuskov.epam_hw.databinding.ActivityMainBinding
-import com.nkuskov.epam_hw.model.GridRecyclerViewModel
-import com.nkuskov.epam_hw.model.VerticalRecyclerViewModel
+import com.nkuskov.epam_hw.model.GridItemsModel
+import com.nkuskov.epam_hw.model.VerticalItemsModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,10 +39,5 @@ class MainActivity : AppCompatActivity() {
                 null
             )
         }
-    }
-
-    companion object{
-        val verticalModel = VerticalRecyclerViewModel()
-        val gridModel = GridRecyclerViewModel()
     }
 }

@@ -1,6 +1,6 @@
-package com.nkuskov.epam_hw.view
+package com.nkuskov.epam_hw.presenter
 
-interface GridRecyclerView {
+interface IGridRecyclerView {
     fun updateItem(position: Int)
     fun addNewItem(position: Int)
 }

@@ -1,25 +1,26 @@
 package com.nkuskov.epam_hw.presenter
 
-import com.nkuskov.epam_hw.model.GridItem
-import com.nkuskov.epam_hw.model.GridRecyclerViewModel
-import com.nkuskov.epam_hw.model.GridRecyclerViewModelListener
-import com.nkuskov.epam_hw.view.GridRecyclerView
-import com.nkuskov.epam_hw.view.MainActivity
+import com.nkuskov.epam_hw.model.GridItemsModel
+import com.nkuskov.epam_hw.presenter.view_data.GridItem
 
-class GridRecyclerViewPresenter(private var gridRecyclerView: GridRecyclerView?): GridRecyclerViewModelListener {
+class GridRecyclerViewPresenter {
+
+    val model = GridItemsModel()
+    var gridRecyclerView: IGridRecyclerView? = null
+
+    private val _gridItems = mutableListOf<GridItem>()
+
+    val items: List<GridItem>
+        get() = _gridItems
 
     fun addNewItem() {
-        MainActivity.gridModel.addNewItem(this)
-    }
-
-    fun getItems() : MutableList<GridItem> = MainActivity.gridModel.items
-
-    override fun onItemAdded(position: Int) {
+        val position = items.size
+        _gridItems.add(GridItem.Placeholder)
         gridRecyclerView?.addNewItem(position)
-    }
-
-    override fun onItemUpdated(position: Int) {
-        gridRecyclerView?.updateItem(position)
+        model.addNewStar {
+            _gridItems[position] = GridItem.DefaultItem(position)
+            gridRecyclerView?.updateItem(position)
+        }
     }
 
     fun onDestroy(){

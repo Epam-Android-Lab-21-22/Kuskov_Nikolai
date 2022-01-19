@@ -1,6 +1,5 @@
 package com.nkuskov.epam_hw
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -10,7 +9,7 @@ import com.nkuskov.epam_hw.databinding.LinearButtonLayoutBinding
 import com.nkuskov.epam_hw.databinding.LinearCheckboxLayoutBinding
 import com.nkuskov.epam_hw.databinding.LinearTitleLayoutBinding
 import com.nkuskov.epam_hw.presenter.VerticalRecyclerViewPresenter
-import com.nkuskov.epam_hw.model.VerticalItem
+import com.nkuskov.epam_hw.presenter.view_data.VerticalItem
 
 class VerticalRecyclerViewAdapter(private val presenter: VerticalRecyclerViewPresenter) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -25,7 +24,7 @@ class VerticalRecyclerViewAdapter(private val presenter: VerticalRecyclerViewPre
                 viewBinding = LinearButtonLayoutBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 ),
-                buttonAction = { position -> presenter.removeItem(presenter.getItems()[position])}
+                buttonAction = { position -> presenter.removeItem(position)}
             )
             VerticalItemType.CHECKBOX.ordinal -> CheckboxViewHolder(
                 viewBinding = LinearCheckboxLayoutBinding.inflate(
@@ -39,19 +38,19 @@ class VerticalRecyclerViewAdapter(private val presenter: VerticalRecyclerViewPre
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is TitleViewHolder -> holder.bind(presenter.getItems()[position] as VerticalItem.TitleItem)
-            is CheckboxViewHolder -> holder.bind(presenter.getItems()[position] as VerticalItem.CheckboxItem)
-            is ButtonViewHolder -> holder.bind(presenter.getItems()[position] as VerticalItem.ButtonItem)
+            is TitleViewHolder -> holder.bind(presenter.items[position] as VerticalItem.TitleItem)
+            is CheckboxViewHolder -> holder.bind(presenter.items[position] as VerticalItem.ToDoItem)
+            is ButtonViewHolder -> holder.bind(presenter.items[position] as VerticalItem.ShopItem)
         }
     }
 
-    override fun getItemCount(): Int = presenter.getItems().size
+    override fun getItemCount(): Int = presenter.items.size
 
     override fun getItemViewType(position: Int): Int {
-        return when (presenter.getItems()[position]) {
+        return when (presenter.items[position]) {
             is VerticalItem.TitleItem -> VerticalItemType.TITLE.ordinal
-            is VerticalItem.ButtonItem -> VerticalItemType.BUTTON.ordinal
-            is VerticalItem.CheckboxItem -> VerticalItemType.CHECKBOX.ordinal
+            is VerticalItem.ShopItem -> VerticalItemType.BUTTON.ordinal
+            is VerticalItem.ToDoItem -> VerticalItemType.CHECKBOX.ordinal
         }
     }
 
@@ -59,10 +58,11 @@ class VerticalRecyclerViewAdapter(private val presenter: VerticalRecyclerViewPre
         notifyItemRemoved(position)
     }
 
-    fun changeCheckedStatus(position: Int, isChecked: Boolean) {
-        val newItem = (presenter.getItems()[position] as VerticalItem.CheckboxItem).copy(isChecked = isChecked)
-        presenter.getItems().removeAt(position)
-        presenter.getItems().add(position, newItem)
+    fun updateItem(position: Int) {
+        notifyItemChanged(position)
+    }
+
+    fun changeCheckedStatus(position: Int) {
         notifyItemChanged(position)
     }
 
@@ -80,7 +80,7 @@ class VerticalRecyclerViewAdapter(private val presenter: VerticalRecyclerViewPre
         private val checkAction: (Int, Boolean) -> Unit
     ) : RecyclerView.ViewHolder(viewBinding.root) {
 
-        fun bind(item: VerticalItem.CheckboxItem) {
+        fun bind(item: VerticalItem.ToDoItem) {
             viewBinding.checkBoxItemTextView.text = item.note
             viewBinding.checkBox.setOnCheckedChangeListener(null)
             viewBinding.checkBox.isChecked = item.isChecked
@@ -95,14 +95,18 @@ class VerticalRecyclerViewAdapter(private val presenter: VerticalRecyclerViewPre
         private val buttonAction: (Int) -> Unit
     ) : RecyclerView.ViewHolder(viewBinding.root) {
 
-        fun bind(item: VerticalItem.ButtonItem) {
+        fun bind(item: VerticalItem.ShopItem) {
             viewBinding.buttonItemTextView.text = item.info
             viewBinding.linerLayoutButton.setOnClickListener(null)
-            viewBinding.linerLayoutButton.visibility = VISIBLE
-            viewBinding.linearLayoutProgress.visibility = INVISIBLE
-            viewBinding.linerLayoutButton.setOnClickListener {
-                it.visibility = INVISIBLE
+            if(item.loading){
+                viewBinding.linerLayoutButton.visibility = INVISIBLE
                 viewBinding.linearLayoutProgress.visibility = VISIBLE
+            }
+            else {
+                viewBinding.linerLayoutButton.visibility = VISIBLE
+                viewBinding.linearLayoutProgress.visibility = INVISIBLE
+            }
+            viewBinding.linerLayoutButton.setOnClickListener {
                 buttonAction(adapterPosition)
             }
         }
