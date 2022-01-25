@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/songs_navigation"
+    app:startDestination="@id/splash_fragment">
+
+    <fragment
+        android:id="@+id/splash_fragment"
+        android:name="com.nkuskov.epam_hw.presentation.splash.SplashFragment"
+        android:label="@string/app_label"
+        tools:layout="@layout/splash_fragment">
+        <action
+            android:id="@+id/action_splash_to_song_previews"
+            app:destination="@id/song_previews_fragment"
+            app:popUpTo="@id/songs_navigation"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/song_previews_fragment"
+        android:name="com.nkuskov.epam_hw.presentation.song_preview.SongPreviewsFragment"
+        android:label="@string/app_label"
+        tools:layout="@layout/song_previews_fragment">
+        <action
+            android:id="@+id/action_song_previews_to_song_info"
+            app:destination="@id/song_info_fragment">
+            <argument
+                android:name="songId" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/song_info_fragment"
+        android:name="com.nkuskov.epam_hw.presentation.song_info.SongInfoFragment"
+        android:label="@string/app_label"
+        tools:layout="@layout/song_info_fragment">
+        <argument
+            android:name="songId"
+            android:defaultValue="empty"
+            app:argType="string"/>
+    </fragment>
+
+</navigation>
