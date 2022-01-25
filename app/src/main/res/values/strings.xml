@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">epam_hw</string>
+    <string name="app_label">Super Nav App</string>
+    <string name="very_long_text">veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryvery looong text</string>
 </resources>
