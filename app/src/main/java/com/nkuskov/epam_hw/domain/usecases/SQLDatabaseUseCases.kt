@@ -1,8 +1,8 @@
 package com.nkuskov.epam_hw.domain.usecases
 
-import com.nkuskov.epam_hw.domain.repositries.IDatabaseRepository
+import com.nkuskov.epam_hw.domain.repositries.ISQLDatabaseRepository
 
-class DatabaseUseCases(private val repository: IDatabaseRepository) {
+class SQLDatabaseUseCases(private val repository: ISQLDatabaseRepository) {
     fun addTextToDatabase(text: String) {
         repository.writeData(text)
     }

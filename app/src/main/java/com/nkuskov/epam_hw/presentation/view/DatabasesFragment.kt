@@ -7,19 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import com.nkuskov.epam_hw.R
-import com.nkuskov.epam_hw.data.database.shared_pref.SharedPref
-import com.nkuskov.epam_hw.presentation.view_model.shared_pref.SharedPrefViewModel
-import com.nkuskov.epam_hw.presentation.view_model.shared_pref.SharedPrefViewModelFactory
 import com.nkuskov.epam_hw.databinding.FragmentDatabasesBinding
-import com.nkuskov.epam_hw.presentation.view_model.database.DatabaseViewModel
-import com.nkuskov.epam_hw.presentation.view_model.database.DatabaseViewModelFactory
-import com.nkuskov.epam_hw.presentation.view_model.external_storage.ExternalStorageViewModel
-import com.nkuskov.epam_hw.presentation.view_model.external_storage.ExternalStorageViewModelFactory
-import com.nkuskov.epam_hw.presentation.view_model.internal_storage.InternalStorageViewModel
-import com.nkuskov.epam_hw.presentation.view_model.internal_storage.InternalStorageViewModelFactory
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -29,30 +19,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.nkuskov.epam_hw.presentation.common.Enums.Companion.CheckPermissionResult
+import com.nkuskov.epam_hw.presentation.view_model.DatabaseFragmentViewModel
+import com.nkuskov.epam_hw.presentation.view_model.DatabaseFragmentViewModelFactory
 import java.lang.Exception
 
 class DatabasesFragment : Fragment(R.layout.fragment_databases) {
-    private val sharedPrefViewModel: SharedPrefViewModel by activityViewModels {
-        SharedPrefViewModelFactory(
-            requireActivity().getSharedPreferences(
-                SharedPref.SHARED_PREF_NAME,
-                AppCompatActivity.MODE_PRIVATE
-            )!!
-        )
-    }
-    private val databaseViewModel: DatabaseViewModel by activityViewModels {
-        DatabaseViewModelFactory(
-            requireActivity()
-        )
-    }
-    private val internalStorageViewModel: InternalStorageViewModel by activityViewModels {
-        InternalStorageViewModelFactory(
-            requireActivity()
-        )
-    }
-    private val externalStorageViewModel: ExternalStorageViewModel by activityViewModels {
-        ExternalStorageViewModelFactory(
-            requireActivity()
+    private val databaseFragmentViewModel: DatabaseFragmentViewModel by activityViewModels {
+        DatabaseFragmentViewModelFactory(
+            requireActivity().applicationContext
         )
     }
 
@@ -75,28 +49,28 @@ class DatabasesFragment : Fragment(R.layout.fragment_databases) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSharedPrefCallbacks()
-        initDatabaseCallbacks()
+        initSQLDatabaseCallbacks()
         initInternalStorageCallbacks()
         initExternalStorageCallbacks()
     }
 
     private fun initSharedPrefCallbacks() {
-        sharedPrefViewModel.textData.observe(viewLifecycleOwner) {
+        databaseFragmentViewModel.sharedPrefTextData.observe(viewLifecycleOwner) {
             Toast.makeText(activity, it, LENGTH_LONG).show()
         }
 
         binding.sharedPrefWriteData.setOnClickListener {
             if (textInputNotEmpty)
-                sharedPrefViewModel.writeData(textInputValue)
+                databaseFragmentViewModel.writeDataToSharedPref(textInputValue)
         }
 
         binding.sharedPrefReadData.setOnClickListener {
-            sharedPrefViewModel.readData()
+            databaseFragmentViewModel.readDataFromSharedPref()
         }
     }
 
-    private fun initDatabaseCallbacks() {
-        databaseViewModel.textData.observe(viewLifecycleOwner) {
+    private fun initSQLDatabaseCallbacks() {
+        databaseFragmentViewModel.sqlDatabaseTextData.observe(viewLifecycleOwner) {
             activity?.runOnUiThread {
                 Toast.makeText(activity, it, LENGTH_LONG).show()
             }
@@ -104,57 +78,81 @@ class DatabasesFragment : Fragment(R.layout.fragment_databases) {
 
         binding.databaseWriteData.setOnClickListener {
             if (textInputNotEmpty)
-                databaseViewModel.writeData(textInputValue)
+                try {
+                    databaseFragmentViewModel.writeDataToSQLDatabase(textInputValue)
+                } catch (e: Exception) {
+                    Toast.makeText(activity, e.message, LENGTH_LONG).show()
+                }
         }
 
         binding.databaseReadData.setOnClickListener {
-            databaseViewModel.readData()
+            try {
+                databaseFragmentViewModel.readDataFromSQLDatabase()
+            } catch (e: Exception) {
+                Toast.makeText(activity, e.message, LENGTH_LONG).show()
+            }
         }
     }
 
     private fun initInternalStorageCallbacks() {
-        internalStorageViewModel.textData.observe(viewLifecycleOwner) {
+        databaseFragmentViewModel.internalStorageTextData.observe(viewLifecycleOwner) {
             Toast.makeText(activity, it, LENGTH_LONG).show()
         }
 
         binding.internalStorageWriteData.setOnClickListener {
             if (textInputNotEmpty)
-                internalStorageViewModel.writeData(textInputValue)
+                try {
+                    databaseFragmentViewModel.writeDataToInternalStorage(textInputValue)
+                } catch (e: Exception) {
+                    Toast.makeText(activity, e.message, LENGTH_LONG).show()
+                }
         }
 
         binding.internalStorageReadData.setOnClickListener {
             try {
-                internalStorageViewModel.readData()
+                databaseFragmentViewModel.readDataFromInternalStorage()
             } catch (e: Exception) {
-                println(e.message)
+                Toast.makeText(activity, e.message, LENGTH_LONG).show()
             }
         }
     }
 
     private fun initExternalStorageCallbacks() {
-        externalStorageViewModel.textData.observe(viewLifecycleOwner) {
+        databaseFragmentViewModel.externalStorageTextData.observe(viewLifecycleOwner) {
             Toast.makeText(activity, it, LENGTH_LONG).show()
         }
 
         binding.externalStorageWriteData.setOnClickListener {
             if (textInputNotEmpty)
                 handleCheckResult(checkPermission()) {
-                    writeDataToExternalStorage()
+                    try {
+                        writeDataToExternalStorage()
+                    } catch (e: Exception) {
+                        Toast.makeText(activity, e.message, LENGTH_LONG).show()
+                    }
                 }
 
         }
 
         binding.externalStorageReadData.setOnClickListener {
             handleCheckResult(checkPermission()) {
-                externalStorageViewModel.readData()
+                try {
+                    databaseFragmentViewModel.readDataFromExternalStorage()
+                } catch (e: Exception) {
+                    Toast.makeText(activity, e.message, LENGTH_LONG).show()
+                }
             }
         }
     }
 
     private fun writeDataToExternalStorage(){
-        externalStorageViewModel.writeData(
-            textInputValue
-        )
+        try {
+            databaseFragmentViewModel.writeDataToExternalStorage(
+                textInputValue
+            )
+        } catch (e: Exception) {
+            Toast.makeText(activity, e.message, LENGTH_LONG).show()
+        }
     }
 
     override fun onRequestPermissionsResult(

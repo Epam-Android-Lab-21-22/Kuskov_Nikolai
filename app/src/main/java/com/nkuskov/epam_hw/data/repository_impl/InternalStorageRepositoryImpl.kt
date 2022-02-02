@@ -6,6 +6,7 @@ import com.nkuskov.epam_hw.domain.repositries.IInternalStorageRepository
 
 class InternalStorageRepositoryImpl(context: Context) : IInternalStorageRepository {
     private val internalStorage = InternalStorage(context)
+    @Throws(Exception::class)
     override fun writeData(text: String) {
         internalStorage.writeData(text)
     }
